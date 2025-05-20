@@ -6,12 +6,9 @@ import argparse
 
 # Initiate the parser
 parser = argparse.ArgumentParser()
-parser.add_argument("-P", "--pathway", help="reactome ID no of pathway",
-        action="store_true")
-parser.add_argument("-l", "--login", help="neo4j login credential",
-        action="store_true")
-parser.add_argument("-p", "--password", help="no4j passwd credential",
-        action="store_true")
+parser.add_argument("-P", "--pathway", nargs=1, help="reactome ID no of pathway")
+parser.add_argument("-l", "--login", nargs=1, help="neo4j login credential")
+parser.add_argument("-p", "--password", nargs=1, help="no4j passwd credential")
 
 # Read arguments from the command line
 args = parser.parse_args()
@@ -23,7 +20,7 @@ args = parser.parse_args()
 #logging.getLogger("neo4j").addHandler(handler)
 #logging.getLogger("neo4j").setLevel(logging.DEBUG)
 
-uri = "bolt://127.0.0.1:7687"
+uri = "bolt://localhost:7687"
 driver = GraphDatabase.driver(uri, auth=(args.login, args.password))
 driver.verify_connectivity()
 
