@@ -67,11 +67,13 @@ def find_reaction_details(xml_filepath, target_reaction_id):
     # --- End Caching ---
 
     reaction_parent_node = reactome_node.find('Reaction')
-    if reaction_parent_node is None:
-        print("Error: <Reaction> tag not found in XML.")
+    blackboxevent_parent_node = reactome_node.find('BlackBoxEvent')
+    if reaction_parent_node is None or blackboxevent_parent_node is None:
+        print("Error: tags not found in XML.")
         return None, None
 
-    for instance_node in reaction_parent_node.findall('instance'):
+    instance_nodes = reaction_parent_node.findall('instance') + blackboxevent_parent_node.findall('instance')
+    for instance_node in instance_nodes:
         # Reaction DB_ID is typically a direct attribute of the instance
         # or a child attribute named 'DB_ID'. Prioritize child if present.
         current_reaction_id = None
@@ -182,10 +184,15 @@ def main():
         print(f"No PubMed IDs found for reaction DB_ID '{args.id}'.")
     
     # --- Write summary.txt ---
-    summary_output_path = "summary.txt"
+    summary_output_path = "short.txt"
     try:
         with open(summary_output_path, 'w', encoding='utf-8') as f:
-            f.write(reaction_summary if reaction_summary else "No summary text found for this reaction.")
+            
+            if reaction_summary:
+                f.write(reaction_summary)
+            else:
+                print("No summary text found for this reaction.")
+                exit(0)
         print(f"Reaction summary written to '{summary_output_path}'")
     except IOError as e:
         print(f"Error writing summary file '{summary_output_path}': {e}")
