@@ -68,11 +68,12 @@ def find_reaction_details(xml_filepath, target_reaction_id):
 
     reaction_parent_node = reactome_node.find('Reaction')
     blackboxevent_parent_node = reactome_node.find('BlackBoxEvent')
-    if reaction_parent_node is None or blackboxevent_parent_node is None:
+    pathway_parent_node = reactome_node.find('Pathway')
+    if reaction_parent_node is None or pathway_parent_node is None:
         print("Error: tags not found in XML.")
         return None, None
 
-    instance_nodes = reaction_parent_node.findall('instance') + blackboxevent_parent_node.findall('instance')
+    instance_nodes = reaction_parent_node.findall('instance') + blackboxevent_parent_node.findall('instance') + pathway_parent_node.findall('instance')
     for instance_node in instance_nodes:
         # Reaction DB_ID is typically a direct attribute of the instance
         # or a child attribute named 'DB_ID'. Prioritize child if present.
