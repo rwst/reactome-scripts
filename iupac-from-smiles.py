@@ -2,12 +2,18 @@
 # Posted by user16769489, modified by community. See post 'Timeline' for change history
 # Retrieved 2025-11-29, License - CC BY-SA 4.0
 
+import argparse
 import pubchempy
 
-name = ["C[C@H]([NH2+][C@@H](CCc1ccccc1)C(=O)[O-])C(=O)N1CCC[C@H]1C(=O)[O-]"]
+def main():
+  parser = argparse.ArgumentParser(description='Convert SMILES string to IUPAC name.')
+  parser.add_argument('smiles', type=str, help='The SMILES string to convert.')
+  args = parser.parse_args()
 
-for i in name:
-  compounds = pubchempy.get_compounds(i, namespace='smiles')
+  compounds = pubchempy.get_compounds(args.smiles, namespace='smiles')
   match = compounds[0]
   print(match.iupac_name)
+
+if __name__ == "__main__":
+  main()
 
